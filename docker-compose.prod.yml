@@ -1,0 +1,11 @@
+version: '3'
+
+services: 
+    note_postgres:
+        image: kurashiva/notesapp_psql_db
+
+    note_web:
+        image: kurashiva/notesapp_django_web
+        env_file: .env.prod
+        ports: 
+            - $PORT:8000 # $port is given by heroku.

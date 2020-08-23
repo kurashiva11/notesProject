@@ -1,0 +1,52 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+    
+<div class="wrapper">
+    <!-- Sidebar  -->
+    <nav id="sidebar" style="height: 100vh;">
+        <div class="sidebar-header">
+            <h3>Explorer</h3>
+        </div>
+        <ul class="list-unstyled components">
+            {% for file in files %}
+            <li>
+                <a href="#" class='file' id='{{file.name}}'>{{file.name}} <span style="float:right;"><span class="mr-1 setAlarm" id="{{file.name}}"><i class="fas fa-clock mr-2"></i></span><span class="mr-1 fileDelete" id="{{file.name}}"><i class="fa fa-trash" aria-hidden="true"></i></span></span> </a>
+            </li>
+            <div class="custom-menu">
+                <li id="{{file.name}}" class="rename">rename</li>
+            </div>
+            {% endfor %}
+        </ul>
+    </nav>
+
+    <!-- Page Content  -->
+    <div id="content" style="margin: 0; padding: 0;">
+        <!-- <form action="addFile" method="POST" name="addFile"> -->
+            
+            <nav class="navbar navbar-expand-lg navbar-light bg-light" style="margin-bottom: 14px;">
+                <div class="container-fluid" style="margin: 0; padding: 0;">
+
+                    <a type="button" id="sidebarCollapse" class="btn btn-info"><i class="fas fa-align-left"></i></a>
+                        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                            <ul class="nav navbar-nav ml-auto">
+                                    <li class='nav-item mr-3'>
+                                        <input class="form-control fileName nav-link" type="search" placeholder="File Name" name="filename" aria-label="Search">
+                                    </li>
+                                    <li class="nav-item">
+                                        <button type="submit" class="btn btn-success nav-link save-file">Save</button>
+                                    </li>
+                            </ul>
+                        </div>
+                </div>
+            </nav>
+            <div class="form-group" style="margin: 14px;">
+                <textarea class="form-control notepad" rows="20" id="comment" autocomplete="of" name="filedata" autofocus></textarea>
+            </div>
+        
+        <!-- </form> -->
+    </div>
+</div>
+
+{% endblock %}

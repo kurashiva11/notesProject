@@ -1,0 +1,39 @@
+version: '3'
+
+services: 
+    note_postgres:
+        build: 
+            context: .
+            dockerfile: Dockerfile_for_postgres_DB
+        image: kurashiva/notesapp_psql_db
+        environment:
+            POSTGRES_USER: postgres
+            POSTGRES_PASSWORD: 1234
+            POSTGRES_DB: notes_db
+            
+        networks: 
+            - note_project_network
+        ports: 
+            - "5432:5432"
+        volumes: 
+            - postgres_vol:/var/lib/postgresql/data
+    
+    note_web:
+        build: 
+            context: .
+            dockerfile: Dockerfile_for_notes_web
+        image: kurashiva/notesapp_django_web
+        env_file: .env
+        ports: 
+            - 8000:8000
+        networks: 
+            - note_project_network
+        restart: always
+        depends_on: 
+            - note_postgres
+
+networks: 
+    note_project_network:
+
+volumes: 
+    postgres_vol:

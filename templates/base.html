@@ -1,0 +1,274 @@
+{% load static %}
+
+<!doctype html>
+<html lang="en">
+    <head>
+        <title>Notes</title>
+        <!-- Required meta tags -->
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+        <!-- favicon -->
+        <link rel="icon" href="{% static 'img/notes-icons.png' %}" type="image/gif" sizes="16x16">
+
+        <!-- Bootstrap CSS -->
+        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+
+        <!-- myStyleSheet -->
+        <link rel="stylesheet" href="{% static 'css/index.css' %}">
+
+        
+        <style>
+          .custom-menu {
+              display: none;
+              z-index: 1000;
+              position: absolute;
+              overflow: hidden;
+              border: 1px solid #CCC;
+              white-space: nowrap;
+              font-family: sans-serif;
+              background: #FFF;
+              color: #333;
+              border-radius: 5px;
+              padding: 0;
+          }
+
+          /* Each of the items in the list */
+          .custom-menu li {
+              padding: 8px 12px;
+              cursor: pointer;
+              list-style-type: none;
+              transition: all .3s ease;
+              user-select: none;
+          }
+
+          .custom-menu li:hover {
+              background-color: #DEF;
+          }
+        </style>
+
+
+    </head>
+    <body>
+
+        <nav class="navbar navbar-expand-lg navbar-light bg-light" style="margin: 0;">
+            <a class="navbar-brand" href="#">
+                <img src="{% static 'img/notes-icons.png' %}" width="30" height="30" alt="">
+            </a>
+            <a class="navbar-brand" href="#">Notes</a>
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+          
+            <div class="collapse navbar-collapse" id="navbarSupportedContent">
+
+                {% if user.is_authenticated %}
+                    
+                    <ul class="navbar-nav mr-auto ml-auto">
+                        <li class="nav-item">
+                            <h4 id="name">Hello {{name}}!</h4>
+                        </li>
+                    </ul>
+
+                {% else %}
+
+                    <ul class="navbar-nav mr-auto">
+                        <li class="nav-item">
+                            <button type="button" class="btn btn-light login" data-toggle="modal" data-target="#loginModal">Login</button>
+                        </li>
+                        <li class="nav-item">
+                            <button type="button" class="btn btn-light register" data-toggle="modal" data-target="#registerModal">Register</button>
+                        </li>
+                    </ul>
+
+                {% endif %}
+
+
+                <div class="form-inline my-2 my-lg-0">
+
+                    {% if user.is_authenticated %}
+                    <ul class="navbar-nav mr-auto">
+                        <li class="nav-item">
+                            <a type="button" class="btn btn-light mr-2" href="signout">signout</a>
+                        </li>
+                    </ul>
+                    {% endif %}
+                </div>
+            </div>
+        </nav>
+        
+        <!-- <div style='position=relative'> -->
+          {% for message in messages %}
+            <div class="toast mr-auto ml-auto" role="alert" aria-live="assertive" aria-atomic="true" data-delay='10000' style="position: absolute; left:45%; top: 8%; transform: translate(-50%, -50%);">
+              <div class="toast-body">
+                {{message}}
+              </div>
+            </div>
+          {% endfor %}
+        <!-- </div> -->
+
+
+        {% block content %}
+
+        {% endblock %}
+
+        
+        <!-- LoginModal -->
+        <div class="modal fade" id="loginModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered" role="document">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <h5 class="modal-title" id="exampleModalLongTitle">Login</h5>
+                  <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                  </button>
+                </div>
+                <form action="login" method="POST">
+
+                    {% csrf_token %}
+                  
+                    <div class="modal-body">
+                      <span>Email</span>
+                      <input type="text" name="username" placeholder="username" autofocus autocomplete="off">
+                      <br><br>
+                      <span>Password</span>
+                      <input type="password" name="password" placeholder="password" autocomplete="off">
+                    </div>
+                    <div class="modal-footer">
+                      <button type="submit" class="btn btn-primary">login</button>
+                    </div>
+
+                </form>
+              </div>
+            </div>
+        </div>
+
+        <!-- registerModal -->
+        <div class="modal fade" id="registerModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered" role="document">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <h5 class="modal-title" id="exampleModalLongTitle">Register</h5>
+                  <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                  </button>
+                </div>
+                <div class="modal-body">
+                <form action="register" method="post">
+
+                    {% csrf_token %}
+                  
+                      <span>Firstname</span>
+                      <input type="text" name="firstname" placeholder="Firstname" autofocus autocomplete="off">
+                      <br><br>
+                      <span>Lastname</span>
+                      <input type="text" name="lastname" placeholder="Lastname" autofocus autocomplete="off">
+                      <br><br>
+                      <span>Username</span>
+                      <input type="text" name="username" placeholder="userName" autofocus autocomplete="off">
+                      <br><br>
+                      <span>Email</span>
+                      <input type="text" name="email" placeholder="Email" autofocus autocomplete="off">
+                      <br><br>
+                      <span>Password</span>
+                      <input type="password" name="password" placeholder="password" autocomplete="off">
+                      <br><br>
+                      <span>Retype password</span>
+                      <input type="password" name="repassword" placeholder="retype password" autocomplete="off">
+                    
+                    <div class="modal-footer">
+                      <button type="submit" class="btn btn-primary regi">register</button>
+                    </div>
+                </form>
+                </div>
+              </div>
+            </div>
+        </div>
+        
+
+        <span class="files" style="display: none;">{{files}}</span>
+
+
+        <!-- Optional JavaScript -->
+        <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+        <script src="https://code.jquery.com/jquery-3.4.1.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+        <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+        <!-- fontawesome -->
+        <script defer src="https://use.fontawesome.com/releases/v5.0.13/js/solid.js" integrity="sha384-tzzSw1/Vo+0N5UhStP3bvwWPq+uvzCMfrN1fEFe+xBmv1C/AtVX5K0uZtmcHitFZ" crossorigin="anonymous"></script>
+        <script defer src="https://use.fontawesome.com/releases/v5.0.13/js/fontawesome.js" integrity="sha384-6OIrr52G08NpOFSZdxxz1xdNSndlD4vdcf/q2myIUVO0VsqaGHJsB0RaBE01VTOY" crossorigin="anonymous"></script>
+        <!-- moment, tempusdominus -->
+        <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.22.2/moment.min.js"></script>
+        <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/tempusdominus-bootstrap-4/5.0.1/js/tempusdominus-bootstrap-4.min.js"></script>
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/tempusdominus-bootstrap-4/5.0.1/css/tempusdominus-bootstrap-4.min.css" />
+
+        <script>
+          $('.toast').toast('show');
+        </script>
+        <!-- My js file -->
+        <script src="{% static 'index.js' %}"></script>
+
+
+      <!-- Button trigger modal -->
+      <button type="button" style="display: none;" data-toggle="modal" data-target="#alarmModal" class="alarmModalBtn"></button>
+      <!-- Modal -->
+      <div class="modal fade" id="alarmModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="exampleModalLabel">Set Alarm for <span class="alarmModalTitle"></span></h5>
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
+            <div class="modal-body">
+              
+
+
+            <div class="container">
+                <div class="row">
+                    <div class="col-sm-6">
+                        <div class="form-group">
+                            <div class="input-group date" id="datetimepicker3" data-target-input="nearest">
+                                <input type="text" class="form-control datetimepicker-input" data-target="#datetimepicker3"/>
+                                <div class="input-group-append" data-target="#datetimepicker3" data-toggle="datetimepicker">
+                                    <div class="input-group-text"><i class="fa fa-clock"></i></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <script type="text/javascript">
+                        $(function () {
+                            $('#datetimepicker3').datetimepicker({
+                                format: 'LT'
+                            });
+                        });
+                    </script>
+                </div>
+            </div>      
+
+
+
+
+
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+              <button type="button" class="btn btn-primary addAlarm">Set</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+
+    
+
+
+        <script>
+          function notify(){
+            {{scrpt | safe}}
+          }
+        </script>
+
+    </body>
+</html>
