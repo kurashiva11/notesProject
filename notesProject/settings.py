@@ -31,7 +31,7 @@ if os.getenv("DJANGO_DEBUG_MODE") == '1':
 else:
     DEBUG = False
 
-ALLOWED_HOSTS = ['192.168.99.100', 'localhost']
+ALLOWED_HOSTS = ['0.0.0.0', 'localhost', '127.0.0.1', 'notes-app2.herokuapp.com']
 
 
 # Application definition
@@ -86,8 +86,8 @@ DATABASES = {
         'NAME': os.getenv("DB_NAME"),
         'USER': os.getenv("DB_USER"),
         'PASSWORD': os.getenv("DB_PASS"),
-        # 'HOST': 'localhost' # for normal execution
-        'HOST': 'note_postgres', # for dockerized execution.
+        'HOST': 'localhost' # for normal execution
+        # 'HOST': 'note_postgres', # for dockerized execution.
         # change above to a variable for more flexible.
     }
 }
