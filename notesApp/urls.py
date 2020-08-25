@@ -8,5 +8,5 @@ urlpatterns = [
     path('signout', views.signout, name='signout'),
     path('addFile', views.addFile, name='addFile'),
     path('deleteFile', views.deleteFile, name='deleteFile'),
-    path('deleteFile', views.deleteFile, name='deleteFile'),
+    path('getFiles', views.getfiles, name='getfiles'),
 ]

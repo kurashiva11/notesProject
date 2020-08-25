@@ -86,9 +86,9 @@ DATABASES = {
         'NAME': os.getenv("DB_NAME"),
         'USER': os.getenv("DB_USER"),
         'PASSWORD': os.getenv("DB_PASS"),
-        # 'HOST': 'localhost' # for normal execution
+        'HOST': 'localhost' # for normal execution
         # 'HOST': 'note_postgres', # for dockerized execution.
-        'HOST': os.getenv("heroku_DB_URL")
+        # 'HOST': os.getenv("heroku_DB_URL")
         # change above to a variable for more flexible.
     }
 }

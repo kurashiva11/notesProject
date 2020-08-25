@@ -1,19 +1,17 @@
 from django.shortcuts import render, redirect
-from django.http import HttpResponse
+from django.http import HttpResponse, JsonResponse
 from django.contrib import auth, messages
 from django.contrib.auth.models import User
 from .models import NotesUser
 from django.contrib.auth.decorators import login_required
+from django.core import serializers
+import json
 
 # Create your views here.
 
 def notes(request):
 	if request.user.is_authenticated:
-		datas = NotesUser.objects.filter(user = request.user)
-		if len(datas) > 0:
-			return render(request, 'notes.html', {"name": request.user, "files": datas[0].files, "scrpt": "console.log('this is views.py');if(AllowNotification){new Notification('To do list')}"})
-		else:
-			return render(request, 'notes.html', {"name": request.user})
+		return render(request, 'notes.html', {"name": request.user})
 	return render(request, 'notes.html')
 
 
@@ -64,12 +62,8 @@ def login(request):
 
 		if user is not None:
 			auth.login(request, user)
-			notesuser = NotesUser.objects.filter(user=user)
-			if len(notesuser) == 1:
-				return  redirect('/') # render(request, 'notes.html', {"name": user.first_name, "files": notesuser[0].files})
-			else:
-				messages.info(request, "no notes, please create normal account, your a superuser")
-				return redirect('/')
+			request.session["user_id"] = user.id
+			return redirect('/')
 		else:
 			messages.info(request, "user does not exists, please register or may be password wrong")
 			return redirect('/')
@@ -83,15 +77,21 @@ def login(request):
 @login_required(login_url='/login/')
 def signout(request):
 	auth.logout(request)
+	request.session['user_id'] = None
 	return redirect('/')
+
+
+@login_required(login_url='/login/')
+def getfiles(request):
+	user_files = NotesUser.objects.get(user = User.objects.get(username=request.user))
+	return JsonResponse(user_files.files, status=200, safe=False)	# here safe is false inorder to send the list of dicts.
 
 
 @login_required(login_url='/login/')
 def addFile(request):
 	if request.method == "POST":
-		user = User.objects.filter(username=request.user)
-		if len(user) != 0:
-			datas = NotesUser.objects.get(user = user[0])
+		try:
+			datas = NotesUser.objects.get(user = User.objects.get(username=request.user))
 			filename = request.POST["filename"]
 			filedata = request.POST["filedata"]
 
@@ -104,7 +104,7 @@ def addFile(request):
 			for data in filesList:
 				if data["name"] == filename:
 					messages.info(request, "file already exists and file is altered")
-					data["text"] = filedata;
+					data["text"] = filedata
 					datas.files = filesList[:]
 					datas.save()
 					return redirect('/')
@@ -117,7 +117,7 @@ def addFile(request):
 			messages.info(request, "saved successfully")
 
 			return redirect('/')
-		else:
+		except :
 			messages.info(request, "maybe user logged out, sorry file not saved")
 			return redirect('/')
 	else:
