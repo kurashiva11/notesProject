@@ -1,69 +1,3 @@
-// var AllowNotification = false;
-
-// $( function(e) {
-//     function get_files(){
-//         var files = $(".files").text();
-//         files = files.replace(/\"/g, '\\\"').replace(/\\\'/g, '`');
-//         files = files.replace(/\'/g, '"').replace(/\`/g, "'");
-//         files = JSON.parse(files)
-//         return files;
-//     }
-
-//     function reloadFiles(data){
-//         $(".files").text( data.filter(".files").text() );
-//         return get_files();
-//     }
-
-//     $(".fileDelete").click(function(e) {
-//         e.stopPropagation();
-//         var name = $(this).attr("id");
-
-//         if(confirm("Are you sure you want to delete " + name + " permanently?")){
-//             $.ajax({
-//                 type: "post", // or "get"
-//                 url: "deleteFile",
-//                 data: {'name': name},
-//                 headers: {'X-CSRFToken': $('input[name="csrfmiddlewaretoken"]').val()}, // for csrf token
-//                 success: function(data) {
-//                     location.reload();
-//                 },
-//                 error: function(e){
-//                     alert("something went wrong");
-//                     location.reload();
-//                 }
-//             });
-//         }
-
-//     });
-
-//     $('.save-file').click(function() {
-//         var textarea = $(".notepad");
-//         var filename = $(".fileName");
-//         filename.val( filename.val().trim() );
-//         var temp = textarea.val();
-//         textarea.val(temp);
-//         var files = get_files();
-//         var files_len = files.length;
-
-//         $(".save-file").html('<span class="spinner-border spinner-border-sm nav-link"></span>' + " Saving");
-
-
-//         $.ajax({
-//             type: "post", // or "get"
-//             url: "addFile",
-//             data: {'filename': filename.val(), 'filedata': textarea.val()},
-//             headers: {'X-CSRFToken': $('input[name="csrfmiddlewaretoken"]').val()}, // for csrf token
-//             success: function(data) {
-//                 location.reload();
-//             },
-//             error: function(e){
-//                 alert("something went wrong");
-//                 location.reload();
-//             }
-//         });
-//     });
-// });
-
 function getFiles(callback) {
     $.ajax({
         type: "get",
@@ -80,6 +14,7 @@ function getFiles(callback) {
 }
 
 function update_file_in_tree(files) {
+    $(".components").empty()
     for (file of files) {
         var file_struct = `<li>
         <a href="#" class='file' id='${file.name}'>${file.name} <span style="float:right;"><span class="mr-1 fileDelete" id="${file.name}"><i class="fa fa-trash" aria-hidden="true"></i></span></span> </a>
@@ -134,7 +69,10 @@ $( function(e) {
                 data: {'filename': filename.val(), 'filedata': textarea.val()},
                 headers: {'X-CSRFToken': $('input[name="csrfmiddlewaretoken"]').val()}, // for csrf token
                 success: function(data) {
-                    location.reload();
+                    $(".save-file").html("Save");
+                    getFiles(function (data) {
+                        update_file_in_tree(data);
+                    });
                 },
                 error: function(e){
                     alert("something went wrong");
@@ -154,7 +92,9 @@ $( function(e) {
                     data: {'name': name},
                     headers: {'X-CSRFToken': $('input[name="csrfmiddlewaretoken"]').val()}, // for csrf token
                     success: function(data) {
-                        location.reload();
+                        getFiles(function (data) {
+                            update_file_in_tree(data);
+                        });
                     },
                     error: function(e){
                         alert("something went wrong");
@@ -179,6 +119,7 @@ $( function(e) {
         });
 
     } else {
-        // console.log("not authenticated")
+        console.log("not authenticated")
+        $("#loginModelLauncher").click();
     }
 });
