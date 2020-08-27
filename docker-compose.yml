@@ -4,7 +4,7 @@ services:
     note_postgres:
         build: 
             context: .
-            dockerfile: Dockerfile_for_postgres_DB
+            dockerfile: Dockerfile.postgresDB
         image: kurashiva/notesapp_psql_db
         environment:
             POSTGRES_USER: postgres
@@ -21,7 +21,7 @@ services:
     note_web:
         build: 
             context: .
-            dockerfile: Dockerfile_for_notes_web
+            dockerfile: Dockerfile.djangoWEB
         image: kurashiva/notesapp_django_web
         env_file: .env
         ports: 

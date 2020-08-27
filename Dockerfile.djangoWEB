@@ -1,6 +1,7 @@
 FROM python:3.8
 
 ENV PYTHONUNBUFFERED 1
+ENV DOCKERIZING 1
 
 WORKDIR /usr/noteProject
 

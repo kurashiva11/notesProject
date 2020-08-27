@@ -80,18 +80,51 @@ WSGI_APPLICATION = 'notesProject.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/3.0/ref/settings/#databases
 
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.postgresql',
-        'NAME': os.getenv("DB_NAME"),
-        'USER': os.getenv("DB_USER"),
-        'PASSWORD': os.getenv("DB_PASS"),
-        'HOST': 'localhost' # for normal execution
-        # 'HOST': 'note_postgres', # for dockerized execution.
-        # 'HOST': os.getenv("heroku_DB_URL")
-        # change above to a variable for more flexible.
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.postgresql',
+#         'NAME': os.getenv("DB_NAME"),
+#         'USER': os.getenv("DB_USER"),
+#         'PASSWORD': os.getenv("DB_PASS"),
+#         'HOST': 'localhost' # for normal execution
+#         # 'HOST': 'note_postgres', # for dockerized execution.
+#         # 'HOST': os.getenv("heroku_DB_URL")
+#         # change above to a variable for more flexible.
+#     }
+# }
+
+if os.getenv("DOCKERIZING")=='1':   # if running in docker conpose environment.
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.postgresql',
+            'NAME': os.getenv("DB_NAME"),
+            'USER': os.getenv("DB_USER"),
+            'PASSWORD': os.getenv("DB_PASS"),
+            'HOST': 'note_postgres'
+        }
     }
-}
+elif DEBUG==True:                   # if running in dev-env or localhost.
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.postgresql',
+            'NAME': os.getenv("DB_NAME"),
+            'USER': os.getenv("DB_USER"),
+            'PASSWORD': os.getenv("DB_PASS"),
+            'HOST': 'localhost'
+        }
+    }
+else:                               # or else running in prodection server(heroku).
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.postgresql',
+            'NAME': os.getenv("DB_NAME"),
+            'USER': os.getenv("DB_USER"),
+            'PASSWORD': os.getenv("DB_PASS"),
+            'HOST': os.getenv("heroku_DB_URL")
+        }
+    }
+
+
 
 
 # Password validation
